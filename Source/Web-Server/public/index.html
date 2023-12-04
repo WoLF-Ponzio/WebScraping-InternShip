@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Vagas Disponíveis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Adicione estilos personalizados aqui, se necessário */
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Vagas Disponíveis</h2>
+    <div class="dropdown mb-4">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            Selecione um tipo de vaga
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><a class="dropdown-item" href="#" onclick="renderVagas('todos')">Todos</a></li>
+            <li><a class="dropdown-item" href="#" onclick="renderVagas('Estágio')">Estágio</a></li>
+            <li><a class="dropdown-item" href="#" onclick="renderVagas('Assistente')">Assistente</a></li>
+            <li><a class="dropdown-item" href="#" onclick="renderVagas('Júnior')">Júnior</a></li>
+            <li><a class="dropdown-item" href="#" onclick="renderVagas('Pleno-Sênior')">Pleno-Sênior</a></li>
+            <li><a class="dropdown-item" href="#" onclick="renderVagas('Diretor')">Diretor</a></li>
+            <!-- Adicione mais tipos de vaga conforme necessário -->
+        </ul>
+    </div>
+    <div id="vagasContainer" class="row">
+        <!-- Cards de Vagas serão adicionados aqui via JavaScript -->
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    
+    async function getVagasData() {
+        try {
+            const response = await fetch('/vagas');
+            if (!response.ok) {
+                throw new Error(`Erro ao obter dados: ${response.statusText}`);
+            }
+
+            const vagasData = await response.json();
+            return vagasData;
+        } catch (error) {
+            console.error('Erro na requisição:', error);
+            return []; // Retorna um array vazio em caso de erro
+        }
+    }
+
+    // Função para renderizar os cards de vagas
+    async function renderVagas(tipo) {
+        const vagasContainer = document.getElementById('vagasContainer');
+        const vagasData = await getVagasData();
+
+        const vagasCount = {}; // Object to keep track of vacancy counts
+
+        vagasContainer.innerHTML = ''; // Clear the container before rendering new cards
+
+        vagasData.forEach(vaga => {
+            // Check if the vacancy type matches the selected type or if all types are selected
+            if (tipo === 'todos' || vaga.Tipo === tipo) {
+                // Check if the vacancy type exists in the object
+                if (!vagasCount[vaga.Tipo]) {
+                    vagasCount[vaga.Tipo] = 0; // Initialize the count to 0
+                }
+
+                // Render the vacancy card only if the count is less than 25
+                if (vagasCount[vaga.Tipo] < 25) {
+                    const cardHtml = `
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">${vaga.vaga}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">${vaga.Empresa} - ${vaga.Tipo}</h6>
+                                    <p class="card-text">${vaga.Descricao}</p>
+                                    <p class="card-text"><strong>Local:</strong> ${vaga.Local}</p>
+                                    <p class="card-text"><strong>Data:</strong> ${vaga.Data}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    vagasContainer.innerHTML += cardHtml;
+                    vagasCount[vaga.Tipo]++; // Increment the count
+                }
+            }
+        });
+
+        // Update the dropdown button text with the selected option
+        const dropdownButton = document.getElementById('dropdownMenuButton');
+        dropdownButton.innerText = tipo === 'todos' ? 'Selecione um tipo de vaga' : tipo;
+    }
+
+    // Chame a função para renderizar os cards quando a página carregar
+    document.addEventListener('DOMContentLoaded', renderVagas('todos'));
+</script>
+
+</body>
+
+</html>

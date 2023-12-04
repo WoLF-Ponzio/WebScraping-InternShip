@@ -32,12 +32,12 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Rota index que renderiza "Hello World"
 app.get('/', (req, res) => {
-  res.send('Hello World');
+  res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 // Rota para obter a vaga e o tipo da vaga do banco de dados
 app.get('/vagas', (req, res) => {
-  const query = 'select v.vaga, v.Empresa, v.Local, v.Data, v.Descricao, tv.descricao from vagas v inner join tipo_vaga tv on tv.id = v.TipoVaga;'
+  const query = 'select v.vaga, v.Empresa, v.Local, v.Data, v.Descricao, tv.Tipo from vagas v inner join tipo_vaga tv on tv.id = v.TipoVaga;'
   db.query(query, (err, result) => {
     if (err) {
       console.error('Erro ao executar a consulta:', err);
