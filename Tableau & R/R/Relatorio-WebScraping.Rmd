@@ -1,0 +1,88 @@
+---
+title: "Atividade Final"
+author: "Ponzio, Artur e Ana"
+date: "2023-11-28"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{R setup, echo=TRUE, Warning=TRUE}
+library(xlsx)
+library(ggplot2)
+library(knitr)
+library(dplyr)
+library(factoextra)
+dados = readxl::read_excel('dados_vagas.xlsx')
+
+#Renomeio das variáveis
+dados$TipoVaga = recode(dados$TipoVaga, 
+                           "1" = "Estágio",
+                           "2" = "Assistente",
+                           "3" = "Júnior",
+                           "4" = "Pleno-Senior",
+                           "5" = "Diretor")
+dados$Vaga = tolower(dados$Vaga)
+dados <- dados %>%
+  rename("Tipo de Vaga" = TipoVaga)
+```
+
+
+#Contexto dos Dados
+Os conjuntos de dados representam um panorama detalhado de vagas de emprego, abrangendo variados setores e níveis de experiência. A primeira planilha fornece informações específicas sobre cada vaga, incluindo a empresa que a oferece, a localização, a data de publicação e uma descrição detalhada do cargo. Essas informações são essenciais para entender as oportunidades de emprego disponíveis, bem como os requisitos e responsabilidades de cada posição.
+Descrição das Variáveis Coletadas
+
+Vagas (dados_vagas):
+ID: Identificação numérica única para cada vaga.
+Vaga: Título ou nome da vaga de emprego.
+Empresa: Empresa que está oferecendo a vaga.
+Local: Localização geográfica da vaga.
+Data: Data de publicação da vaga.
+Descricao: Descrição detalhada do cargo, incluindo responsabilidades e requisitos.
+TipoVaga: Categoria do tipo de vaga (por exemplo, Estágio, Assistente, Júnior, Pleno-Sênior, Diretor).
+
+
+```{r echo=TRUE, warning=FALSE}
+#Filtragem das maiores anunciantes de vagas de trabalho
+top_empresas <- dados %>%
+  group_by(Empresa) %>%
+  summarize(total_vagas = n()) %>%
+  arrange(desc(total_vagas)) %>%
+  head(10) %>%
+  pull(Empresa)
+dados_filtrados <- dados %>% filter(Empresa %in% top_empresas)
+dados_filtrados$Empresa <- factor(dados_filtrados$Empresa, levels = (top_empresas))
+
+#Grafico de barra empilhado, com as 10 maiores
+ggplot(dados_filtrados, aes(x = Empresa, fill = `Tipo de Vaga`)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ggtitle("Quantidade de Vagas por Empresa e Tipo") +
+  xlab("Empresa") +
+  ylab("Quantidade de Vagas")
+```
+
+```{r echo=TRUE, warning=FALSE}
+dados_filtrados <- subset(dados, nchar(Estado) == 2)
+dados_filtrados %>%
+  group_by(Estado, `Tipo de Vaga`) %>%
+  summarize(count = n()) %>%
+  
+  ggplot(aes(x = Estado, y = `Tipo de Vaga`, fill = count)) +
+  geom_tile() +
+  labs(x = "", y = "") + 
+  scale_fill_gradient(low = "white", high = "red") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ggtitle("Distribuição de Tipos de Vaga por Localização")
+```
+
+```{r echo=TRUE}
+#Gráfico de barras do total de vagas dividido por tipo
+ggplot(dados, aes(x = reorder(`Tipo de Vaga`, -table(`Tipo de Vaga`)[`Tipo de Vaga`]), fill = `Tipo de Vaga`)) +
+  geom_bar() +
+  labs(title = "Quantidade de Vagas por Tipo",
+       x = "",
+       y = "Quantidade") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set3")
+```
