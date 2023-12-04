@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Hamburgueria</title>
+    <!-- Inclua os links do Bootstrap via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script></script>
+    <style> 
+        body {
+            background-color: #252f43;
+            color: white;
+        }
+    </style>
+</head>
+<body onload="avaliarLucro(),avaliarConcorrencia(),avaliarReputacao()">
+    <div>
+        <h1>
+            Parabéns por sua jornada como gerente da hamburgueria!
+        </h1>
+        
+        <p>
+            Você enfrentou uma série de desafios e tomou decisões cruciais ao longo do caminho. Agora, é hora de avaliar o desempenho do seu restaurante com base nos três fatores principais.
+        </p>
+
+        <h2>
+            Lucro
+        </h2>
+        
+        <p>
+            Com base nas escolhas feitas, a sua pontuação de lucro totalizou em:  <%= lucro %>, pontos.
+            <br>
+            <span id="TLucro">
+                
+            </span>
+        </p>
+
+        <h2>
+            Reputação
+        </h2>
+        
+        <p>
+            Com base nas escolhas feitas, a sua pontuação de reputacao totalizou em:  <%= reputacao %>, pontos.
+            <br>
+            <span id="TReputacao">
+                
+            </span>
+        </p>
+
+        <h2>
+            Concorrência
+        </h2>
+        
+        <p>
+            Com base nas escolhas feitas, a sua pontuação de concorrencia totalizou em:  <%= concorrencia %>, pontos.
+            <br>
+            <span id="TConcorrencia">
+                
+            </span>
+        </p>
+        
+        <button class="btn btn-primary" onclick="recomecar()">Jogar Novamente</button>
+    </div>
+    <script>
+        let lucro = <%= lucro %>;
+        let reputacao = <%= reputacao%> ;
+        let concorrencia = <%= concorrencia%>;
+
+        function avaliarLucro(){
+            let TLucro = document.getElementById("TLucro");
+            if (lucro < 0) {
+                TLucro.innerText = "Suas escolhas acabaram ocasionando em uma má gestão financeira do reustaurante. O lucro é um dos fatores fundamentais para a manutenção da operação do estabelecimento, então por mais que você possa ter ido bem em outros fatores, o lucro é o que mantém o restaurante funcionando. Tenha em mente que é válido tomar decisões financeiras mais sólidas para que o restaurante não acabe falindo.";
+                
+            } else if (lucro > 0 && lucro <= 4) {
+                TLucro.innerText ="Você não acabou zerado, mas seu lucro precisa de melhorias significativas. Você compreendeu o básico das táticas financeiras. Tenha em mente que decisões financeiras sólidas podem impulsionar seus ganhos.";
+                
+            } else if (lucro > 4 && lucro <= 7) {
+                TLucro.innerText ="Você está no caminho certo, mas ainda há espaço para melhorias. Continue aprimorando suas táticas financeiras para atingir lucros mais sólidos.";
+                
+            } else if (lucro > 7 && lucro <= 10) {
+                TLucro.innerText ="Parabéns, seu desempenho financeiro foi excelente e atende às expectativas. Você conseguiu obter um resultado sólido, e com um pouco mais de refinamento, você pode maximizar o lucro.";
+                
+            } else if (lucro > 10) {
+                TLucro.innerText ="Incrível! Você superou todas as expectativas e conquistou resultados financeiros excepcionais. Sua habilidade em gerenciar os recursos financeiros da hamburgueria é notável a ponto de superar a expectativas.";
+                
+            }
+        }
+
+        function avaliarReputacao(){
+            let TReputacao = document.getElementById("TReputacao");
+            if (reputacao < 0) {
+                TReputacao.innerText = "Suas escolhas acabaram ocasionando em uma Péssima imagem do reustaurante. A qualidade dos produtos e o atendimento ao cliente precisam de atenção imediata. Tenha em mente que ter uma boa imagem e relacionamente com cliente é fundamental para o sucesso do restaurante e ela pode acabar afetando diretamente as outras áreas.";
+                
+            } else if (reputacao > 0 && reputacao <= 4) {
+                TReputacao.innerText = "Você não acabou zerado, mas sua reputação precisa de uma melhoria significativa. Lembre-se de dar atenção a qualidade dos serviços e produtos para conquistar a confiança dos clientes.";
+                
+            } else if (reputacao > 4 && reputacao <= 7) {
+                TReputacao.innerText = "Você está no caminho certo, mas ainda há espaço para melhorias. Continue aprimorando suas táticas financeiras para atingir lucros mais sólidos.";
+                
+            } else if (reputacao > 7 && reputacao <= 10) {
+                TReputacao.innerText = "Parabéns,sua reputação é sólida e reflete seu compromisso com a excelência. Você conseguiu obter um resultado sólido, Com um pouco mais de refinamento, você pode maximizar a reputação.";
+                
+            } else if (reputacao > 10 && reputacao <=13) {
+                TReputacao.innerText = "Incrível! Você superou todas as expectativas e é amadado por todos. Você conseguiu oferecer um ótimo serviço superando as expectativas dos seus clientes!";
+                
+            }else if (reputacao > 13 ) {
+                TReputacao.innerText = "Parabéns!!, Sua reputação é notória pelo mundo todo você conseguiu 2 estrelas Michellin";
+                
+            }
+        }
+
+        function avaliarConcorrencia(){
+            let TConcorrencia = document.getElementById("TConcorrencia");
+            if (concorrencia < 0) {
+                TConcorrencia.innerText = "Sua posição em relação à concorrência é extremamente desfavorável. É essencial reavaliar suas estratégias de mercado.";
+            } else if (concorrencia > 0 && concorrencia <= 4) {
+                TConcorrencia.innerText = "Sua concorrência precisa de uma revisão completa. Identifique áreas de melhoria para competir de forma mais eficaz.";
+                
+            } else if (concorrencia > 4 && concorrencia <= 7) {
+                TConcorrencia.innerText = "Sua posição na concorrência é respeitável, mas ainda há margem para crescimento. Continue a se diferenciar e aprimorar suas táticas de marketing.";
+                
+            } else if (concorrencia > 7 && concorrencia <= 10) {
+                TConcorrencia.innerText = "Você está bem posicionado em relação à concorrência, mostrando estratégias eficazes de diferenciação e marketing.";
+                
+            } else if (concorrencia > 10) {
+                TConcorrencia.innerText = "Incrível! Você superou todas as expectativas e se tornou um líder de mercado. Sua capacidade de competir eficazmente com os concorrentes é impressionante.";
+                
+            }
+        }
+
+        function recomecar() {
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>
